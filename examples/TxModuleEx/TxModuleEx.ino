@@ -5,7 +5,7 @@
 
 void setup()
 {
-  XbeeSerialInit();  
+  XbeeSerialInit(9600);  
 }
 
 void loop()
@@ -16,7 +16,7 @@ void loop()
   -generate a new payload
   -reset txAttempts and queueCount
   */
-  if ( txTimer >= _TX_INTERVAL )
+  if ( loopCount >= _TX_INTERVAL )
   {
     newPayloadRoutine();
   }
@@ -25,12 +25,8 @@ void loop()
   -if an ack was read
   -dequeue, decrement queueCount, reset TxAttempts
   */
-  xbee.readPacket();
-  
-  if (xbee.getResponse().isAvailable())
-  {
-    RxPacketRoutine();
-  }
+  RxPacketRoutine();
+
   
   
   /* check if the queue isn't empty and the txAttempts isn't too high
@@ -41,6 +37,6 @@ void loop()
   
   
   
-  txTimer++;
+  loopCount++;
   delay(1000);
 }

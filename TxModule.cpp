@@ -1,33 +1,37 @@
 #include "TxModule.h"
 
+
+#ifndef TX_TEST
 XBee xbee;
 XBeeAddress64 addr64;
 ZBRxResponse rxResponse;
 ZBTxStatusResponse txResponse;
-
+#endif
 
 uint8_t queue[_MAX_PAYLOAD_SIZE * _MAX_QUEUE_COUNT];
 uint8_t queueCount = 0;
 uint8_t txAttempts = 0;
 
-uint8_t txTimer = 0;
+uint8_t loopCount = 0;
 
 
-void XbeeSerialInit()
+void XbeeSerialInit(int baud)
 {
+#ifndef TX_TEST
   xbee = XBee();
   addr64 = XBeeAddress64(0x0, 0X0);
   rxResponse = ZBRxResponse();
   txResponse = ZBTxStatusResponse();
 
-  Serial.begin(9600); 
+  Serial.begin(baud); 
   xbee.begin(Serial);
-
+#endif
 }
 
 
 void RxPacketRoutine()
 {
+#ifndef TX_TEST
   xbee.readPacket();
   
   if (xbee.getResponse().isAvailable())
@@ -42,18 +46,22 @@ void RxPacketRoutine()
       handleRxPacket();
     }
   }	
+#endif
 }
 
 
 void handleRxPacket()
 {
+#ifndef TX_TEST
   xbee.getResponse().getZBRxResponse(rxResponse);
+#endif
 }
 
 
 
 void handleStatusPacket()
 {
+#ifndef TX_TEST
   int i;
   
   xbee.getResponse().getZBTxStatusResponse(txResponse);
@@ -68,6 +76,7 @@ void handleStatusPacket()
     queueCount--;
     txAttempts = 0;
   }
+#endif
 }
 
 
@@ -75,12 +84,14 @@ void handleStatusPacket()
 
 void TxPacketRoutine()
 {
+#ifndef TX_TEST
   if ( queueCount > 0 && txAttempts < _MAX_TX_ATTEMPTS )
   {
     ZBTxRequest zbTx = ZBTxRequest(addr64, queue, _MAX_PAYLOAD_SIZE);
     xbee.send(zbTx);
     txAttempts++;
   }
+#endif
 }
 
 
@@ -94,7 +105,7 @@ void newPayloadRoutine()
    queue[i] = i; 
   }
   
-  txTimer = 0;
+  loopCount = 0;
   txAttempts = 0;
   queueCount = _MAX_QUEUE_COUNT;
 }
