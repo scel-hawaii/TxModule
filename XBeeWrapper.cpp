@@ -1,7 +1,5 @@
 #include "XBeeWrapper.h"
 
-#define TX_DEBUG
-
 #ifndef TX_DEBUG
 XBee xbee;
 XBeeAddress64 addr64;
@@ -10,9 +8,8 @@ ZBTxStatusResponse txResponse;
 #endif
 
 #ifdef TX_DEBUG
-int transmitFlag = 0; //used to flag that a "packet" has been successfully sent
+int transmitFlag = 0;//used to flag that a "packet" has been successfully sent
 #endif
-
 
 /**
 * Initializes Serial and necessary XBee classes.
@@ -27,6 +24,10 @@ void XBeeInit()
   rxResponse = ZBRxResponse();
   txResponse = ZBTxStatusResponse();
   xbee.begin(Serial);
+#endif
+
+#ifdef TX_DEBUG
+transmitFlag = 0; 
 #endif
 }
 
@@ -140,6 +141,7 @@ int XBeeGetDeliveryStatus()
  void XBeeSend(uint8_t q[], int size)
  {
  int i = 0;
+ 
 #ifndef TX_DEBUG  
   ZBTxRequest zbTx = ZBTxRequest(addr64, q, size);
   xbee.send(zbTx);
@@ -151,10 +153,9 @@ int XBeeGetDeliveryStatus()
   
   for ( i = 0; i < size; i++ )
   {
-    Serial.print(q[i] + " ");
+	Serial.print(q[i]);
+	Serial.print(" ");
   }
   Serial.println();
-  
-  
 #endif
  }

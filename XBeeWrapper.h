@@ -14,7 +14,7 @@ extern ZBTxStatusResponse txResponse;
 #endif
 
 #ifdef TX_DEBUG
-extern int transmitFlag;
+extern int transmitFlag; //used to flag that a "packet" has been successfully sent
 #endif
 
 void XBeeInit();

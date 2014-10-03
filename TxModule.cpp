@@ -71,13 +71,11 @@ void handleStatusPacket()
 */
 void TxPacketRoutine()
 {
-
   if ( queueCount > 0 && txAttempts < _MAX_TX_ATTEMPTS )
   {  
     XBeeSend(queue + (_MAX_PAYLOAD_SIZE * (_MAX_QUEUE_COUNT - queueCount )), _MAX_PAYLOAD_SIZE);
     txAttempts++;
   }
-
 }
 
 
@@ -86,7 +84,6 @@ void TxPacketRoutine()
 */
 void newPayloadRoutine()
 {
-
   int i;
   
   for (i = 0; i < _MAX_QUEUE_COUNT * _MAX_PAYLOAD_SIZE; i++)
