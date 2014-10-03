@@ -7,18 +7,9 @@
 #define _MAX_TX_ATTEMPTS 5  //arbitrary value for the amount of tx retries per packet
 #define _TX_INTERVAL 60  //delay before generating the next payload
 
-#ifndef TX_TEST
 
-#include <Arduino.h>
 #include <XBee.h>
-
-extern XBee xbee;
-extern XBeeAddress64 addr64;
-extern ZBRxResponse rxResponse;
-extern ZBTxStatusResponse txResponse;
-
-#endif
-
+#include "XBeeWrapper.h"
 
 extern uint8_t queue[_MAX_PAYLOAD_SIZE * _MAX_QUEUE_COUNT];
 extern uint8_t queueCount;
@@ -26,9 +17,6 @@ extern uint8_t txAttempts;
 
 extern uint8_t loopCount;
 
-
-
-void XbeeSerialInit(int baud);
 
 void handleStatusPacket();
 

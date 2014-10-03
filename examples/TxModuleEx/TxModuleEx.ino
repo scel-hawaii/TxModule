@@ -1,11 +1,12 @@
-#include <TxModule.h>
 #include <XBee.h>
+#include <TxModule.h>
 
 
 
 void setup()
 {
-  XbeeSerialInit(9600);  
+  Serial.begin(9600);
+  XBeeInit();  
 }
 
 void loop()
