@@ -1,10 +1,21 @@
-#define TX_DEBUG
+//#define TX_DEBUG
 
 #ifndef XBEE_WRAPPER_H
 #define XBEE_WRAPPER_H
 
+#ifndef TX_DEBUG
 #include <Arduino.h>
 #include <XBee.h>
+#endif
+
+#ifdef TX_DEBUG
+#include <iostream>
+
+//the following are defined in the XBee library
+#define SUCCESS 0x00
+#define ZB_RX_RESPONSE 0x90
+#define ZB_TX_STATUS_RESPONSE 0x8B
+#endif
 
 #ifndef TX_DEBUG
 extern XBee xbee;
@@ -15,6 +26,8 @@ extern ZBTxStatusResponse txResponse;
 
 #ifdef TX_DEBUG
 extern int transmitFlag; //used to flag that a "packet" has been successfully sent
+
+void delay(int n);
 #endif
 
 void XBeeInit();

@@ -1,3 +1,4 @@
+//#define TX_DEBUG
 
 #ifndef TX_MODULE_H
 #define TX_MODULE_H
@@ -8,7 +9,10 @@
 #define _TX_INTERVAL 60  //delay before generating the next payload
 
 
+#ifndef TX_DEBUG
 #include <XBee.h>
+#endif
+
 #include "XBeeWrapper.h"
 
 extern uint8_t queue[_MAX_PAYLOAD_SIZE * _MAX_QUEUE_COUNT];

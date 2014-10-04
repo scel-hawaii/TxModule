@@ -25,10 +25,6 @@ void XBeeInit()
   txResponse = ZBTxStatusResponse();
   xbee.begin(Serial);
 #endif
-
-#ifdef TX_DEBUG
-transmitFlag = 0; 
-#endif
 }
 
 
@@ -55,7 +51,7 @@ int XBeeIsAvailable()
   {
      available = 1;
 	 transmitFlag = 0;
-	 Serial.println("A packet is available...");
+	 std::cout << "A packet is available...\n";
   }
 #endif
   
@@ -78,7 +74,7 @@ int XBeeGetApiId()
 
 #ifdef TX_DEBUG
   apId = ZB_TX_STATUS_RESPONSE;
-  Serial.println("...it's a Tx status packet.");
+  std::cout << "...it's a Tx status packet.\n";
 #endif
   
   return apId;
@@ -104,7 +100,7 @@ void XBeeGetZBTxStatusResponse()
 #endif
 
 #ifdef TX_DEBUG
-  Serial.println("Reading Tx status packet...");
+  std::cout << "Reading Tx status packet...\n";
 #endif
 }
 
@@ -124,7 +120,7 @@ int XBeeGetDeliveryStatus()
 
 #ifdef TX_DEBUG
   dStatus = SUCCESS;
-  Serial.println("...it was a success!");
+  std::cout << "...it was a success!\n";
 #endif  
   
   return dStatus;
@@ -132,7 +128,7 @@ int XBeeGetDeliveryStatus()
  
  
  
- /**
+/**
 * Creates and sends a new Tx packet.
 *
 * @param q - array holding the data to be sent
@@ -149,13 +145,25 @@ int XBeeGetDeliveryStatus()
 
 #ifdef TX_DEBUG
   transmitFlag = 1;
-  Serial.println("Sending packet:");
+  std::cout << "Sending packet:\n";
   
   for ( i = 0; i < size; i++ )
   {
-	Serial.print(q[i]);
-	Serial.print(" ");
+	std::cout << (int)q[i]  <<  " ";
   }
-  Serial.println();
+  std::cout << "\n\n\n";
 #endif
  }
+ 
+
+#ifdef TX_DEBUG
+void delay(int n)
+{
+	int i;
+
+	for (int i = 0; i < 10000 * n; i++)
+	{
+	
+	}
+}
+#endif
