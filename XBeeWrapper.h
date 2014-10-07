@@ -1,4 +1,4 @@
-//#define TX_DEBUG
+#include "config.h"
 
 #ifndef XBEE_WRAPPER_H
 #define XBEE_WRAPPER_H

@@ -1,9 +1,9 @@
-//#define TX_DEBUG
+#include "config.h"
 
 #ifdef TX_DEBUG
 
 #include <iostream>
-#include "XbeeWrapper.h"
+#include "XBeeWrapper.h"
 #include "TxModule.h"
 
 

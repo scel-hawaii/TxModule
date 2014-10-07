@@ -1,4 +1,4 @@
-//#define TX_DEBUG
+#include "config.h"
 
 #ifndef TX_MODULE_H
 #define TX_MODULE_H

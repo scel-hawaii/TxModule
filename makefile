@@ -3,11 +3,11 @@ driver: debugDriver.o XBeeWrapper.o TxModule.o
 
 #
 
-debugDriver.o:  XBeeWrapper.h TxModule.h
+debugDriver.o:  config.h XBeeWrapper.h TxModule.h
 
-XBeeWrapper.o:  XBeeWrapper.h
+XBeeWrapper.o:  config.h XBeeWrapper.h
 
-TxModule.o:  XBeeWrapper.h TxModule.h
+TxModule.o:  config.h XBeeWrapper.h TxModule.h
 
 #
 clean:
