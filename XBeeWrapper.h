@@ -10,6 +10,7 @@
 
 #ifdef TX_DEBUG
 #include <iostream>
+#include <stdint.h>
 
 //the following are defined in the XBee library
 #define SUCCESS 0x00

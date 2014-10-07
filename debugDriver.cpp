@@ -2,7 +2,6 @@
 
 #ifdef TX_DEBUG
 
-#include <iostream>
 #include "XBeeWrapper.h"
 #include "TxModule.h"
 
