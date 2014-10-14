@@ -1,18 +1,11 @@
 #include "TxModule.h"
 
-uint8_t queue[_MAX_PAYLOAD_SIZE * _MAX_QUEUE_COUNT];
-uint8_t queueCount = 0;
-uint8_t txAttempts = 0;
-
-uint8_t loopCount = 0;
-
 /**
 * Checks for a new packet.  If a new packet has been
 * read, enter the appropriate function to handle it.
 */
-void RxPacketRoutine()
+void RxPacketRoutine(uint8_t * qCount, uint8_t * txAtt)
 {
-
   int apiId = 0;
   
   if ( XBeeIsAvailable() )
@@ -21,7 +14,7 @@ void RxPacketRoutine()
 	
     if (apiId ==  ZB_TX_STATUS_RESPONSE)
     {
-      handleStatusPacket();
+      handleStatusPacket(qCount, txAtt);
     }
 
     else if (apiId == ZB_RX_RESPONSE)
@@ -29,7 +22,6 @@ void RxPacketRoutine()
       handleRxPacket();
     }
   }
-
 }
  
 
@@ -38,9 +30,7 @@ void RxPacketRoutine()
 */
 void handleRxPacket()
 {
-
   XBeeGetZBRxResponse();
-
 }
   
 
@@ -48,19 +38,15 @@ void handleRxPacket()
 * Handles a Tx Status packet.  Reinitialize/decrement
 * appropriate variables if it was a success.
 */
-void handleStatusPacket()
+void handleStatusPacket(uint8_t * qCount, uint8_t * txAtt)
 {
-
-  int i;
-  
   XBeeGetZBTxStatusResponse();
   
   if ( XBeeGetDeliveryStatus() == SUCCESS )
-  {    
-    queueCount--;
-    txAttempts = 0;
+  {
+    *qCount = *qCount - 1;
+    *txAtt = 0;
   }
-
 }
 
 
@@ -69,12 +55,12 @@ void handleStatusPacket()
 * Transmit the next packet in the queue and increment
 * the amount of Tx attempts.
 */
-void TxPacketRoutine()
+void TxPacketRoutine(uint8_t * qCount, uint8_t * txAtt, uint8_t q[])
 {
-  if ( queueCount > 0 && txAttempts < _MAX_TX_ATTEMPTS )
+  if ( *qCount > 0 && *txAtt < _MAX_TX_ATTEMPTS )
   {  
-    XBeeSend(queue + (_MAX_PAYLOAD_SIZE * (_MAX_QUEUE_COUNT - queueCount )), _MAX_PAYLOAD_SIZE);
-    txAttempts++;
+    XBeeSend(q + (_MAX_PAYLOAD_SIZE * (_MAX_QUEUE_COUNT - *qCount )), _MAX_PAYLOAD_SIZE);
+    *txAtt++;
   }
 }
 
@@ -82,17 +68,17 @@ void TxPacketRoutine()
 /**
 * Generate a new payload and reinitialize values.
 */
-void newPayloadRoutine()
+void newPayloadRoutine(uint8_t * qCount, uint8_t * txAtt, uint8_t q[], uint8_t * loops)
 {
   int i;
   
   for (i = 0; i < _MAX_QUEUE_COUNT * _MAX_PAYLOAD_SIZE; i++)
   {
-   queue[i] = i; 
+   q[i] = i; 
   }
   
-  loopCount = 0;
-  txAttempts = 0;
-  queueCount = _MAX_QUEUE_COUNT;
+  *loops= 0;
+  *txAtt = 0;
+  *qCount = _MAX_QUEUE_COUNT;
 
 }

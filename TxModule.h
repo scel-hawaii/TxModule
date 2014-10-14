@@ -15,21 +15,15 @@
 
 #include "XBeeWrapper.h"
 
-extern uint8_t queue[_MAX_PAYLOAD_SIZE * _MAX_QUEUE_COUNT];
-extern uint8_t queueCount;
-extern uint8_t txAttempts;
 
-extern uint8_t loopCount;
-
-
-void handleStatusPacket();
+void handleStatusPacket(uint8_t * qCount, uint8_t * txAtt);
 
 void handleRxPacket();
 
-void TxPacketRoutine();
+void TxPacketRoutine(uint8_t * qCount, uint8_t * txAtt, uint8_t q[]);
 
-void RxPacketRoutine();
+void RxPacketRoutine(uint8_t * qCount, uint8_t * txAtt);
 
-void newPayloadRoutine();
+void newPayloadRoutine(uint8_t * qCount, uint8_t * txAtt, uint8_t q[], uint8_t * loops);
 
 #endif
