@@ -3,6 +3,9 @@
 /**
 * Checks for a new packet.  If a new packet has been
 * read, enter the appropriate function to handle it.
+*
+* @param qCount - pointer to queue count
+* @param txAtt - pointer to tx attempts
 */
 void RxPacketRoutine(uint8_t * qCount, uint8_t * txAtt)
 {
@@ -37,6 +40,9 @@ void handleRxPacket()
 /**
 * Handles a Tx Status packet.  Reinitialize/decrement
 * appropriate variables if it was a success.
+*
+* @param qCount - pointer to queue count
+* @param txAtt - pointer to tx attempts
 */
 void handleStatusPacket(uint8_t * qCount, uint8_t * txAtt)
 {
@@ -54,6 +60,10 @@ void handleStatusPacket(uint8_t * qCount, uint8_t * txAtt)
 /**
 * Transmit the next packet in the queue and increment
 * the amount of Tx attempts.
+*
+* @param qCount - pointer to queue count
+* @param txAtt - pointer to tx attempts
+* @param q - queue
 */
 void TxPacketRoutine(uint8_t * qCount, uint8_t * txAtt, uint8_t q[])
 {
