@@ -51,7 +51,9 @@ int XBeeIsAvailable()
   {
      available = 1;
 	 transmitFlag = 0;
+#ifdef BOX_DEBUG	 
 	 std::cout << "A packet is available...\n";
+ #endif
   }
 #endif
   
@@ -70,11 +72,13 @@ int XBeeGetApiId()
   
 #ifndef TX_DEBUG  
   apId = xbee.getResponse().getApiId();
-#endif  
+#endif
 
 #ifdef TX_DEBUG
   apId = ZB_TX_STATUS_RESPONSE;
+#ifdef BOX_DEBUG
   std::cout << "...it's a Tx status packet.\n";
+#endif
 #endif
   
   return apId;
@@ -99,7 +103,7 @@ void XBeeGetZBTxStatusResponse()
     xbee.getResponse().getZBTxStatusResponse(txResponse);
 #endif
 
-#ifdef TX_DEBUG
+#ifdef BOX_DEBUG
   std::cout << "Reading Tx status packet...\n";
 #endif
 }
@@ -120,8 +124,10 @@ int XBeeGetDeliveryStatus()
 
 #ifdef TX_DEBUG
   dStatus = SUCCESS;
+ #ifdef BOX_DEBUG 
   std::cout << "...it was a success!\n";
 #endif  
+#endif
   
   return dStatus;
  }
@@ -145,6 +151,7 @@ int XBeeGetDeliveryStatus()
 
 #ifdef TX_DEBUG
   transmitFlag = 1;
+#ifdef BOX_DEBUG
   std::cout << "Sending packet:\n";
   
   for ( i = 0; i < size; i++ )
@@ -152,6 +159,7 @@ int XBeeGetDeliveryStatus()
 	std::cout << (int)q[i]  <<  " ";
   }
   std::cout << "\n\n\n";
+#endif
 #endif
  }
  

@@ -1,6 +1,12 @@
+/*
+* Driver which emulates the weatherbox behaviour
+* and prints XBee debug statements.
+*/
+
+
 #include "config.h"
 
-#ifdef TX_DEBUG
+#ifdef BOX_DEBUG
 
 #include "XBeeWrapper.h"
 #include "TxModule.h"

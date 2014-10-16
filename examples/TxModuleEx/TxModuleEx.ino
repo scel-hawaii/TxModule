@@ -2,42 +2,30 @@
 #include <TxModule.h>
 
 
+uint8_t queue[_MAX_PAYLOAD_SIZE * _MAX_QUEUE_COUNT];
+uint8_t queueCount = 0;
+uint8_t txAttempts = 0;
+
+uint8_t loopCount = 0;
 
 void setup()
 {
   Serial.begin(9600);
-  XBeeInit();  
+  XBeeInit();
 }
+
 
 void loop()
 {
-  //sample data
-  
-  /* execute the following if the transmission interval has passed
-  -generate a new payload
-  -reset txAttempts and queueCount
-  */
   if ( loopCount >= _TX_INTERVAL )
   {
-    newPayloadRoutine();
+    newPayloadRoutine(&queueCount, &txAttempts, queue, &loopCount);
   }
-  
-  /* check for incoming packets
-  -if an ack was read
-  -dequeue, decrement queueCount, reset TxAttempts
-  */
-  RxPacketRoutine();
-
-  
-  
-  /* check if the queue isn't empty and the txAttempts isn't too high
-  -transmit the oldest packet
-  -increment txAttempts
-  */
-  TxPacketRoutine();
-  
-  
-  
+		
+  RxPacketRoutine(&queueCount, &txAttempts);
+		
+  TxPacketRoutine(&queueCount, &txAttempts, queue);
+		
   loopCount++;
-  delay(1000);
+  delay(100);		
 }

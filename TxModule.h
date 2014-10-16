@@ -1,4 +1,5 @@
 #include "config.h"
+#include "XBeeWrapper.h"
 
 #ifndef TX_MODULE_H
 #define TX_MODULE_H
@@ -8,12 +9,6 @@
 #define _MAX_TX_ATTEMPTS 5  //arbitrary value for the amount of tx retries per packet
 #define _TX_INTERVAL 60  //delay before generating the next payload
 
-
-#ifndef TX_DEBUG
-#include <XBee.h>
-#endif
-
-#include "XBeeWrapper.h"
 
 
 void handleStatusPacket(uint8_t * qCount, uint8_t * txAtt);
