@@ -1,5 +1,3 @@
-#include "config.h"
-
 #ifdef TX_DEBUG
 #ifndef BOX_DEBUG
 

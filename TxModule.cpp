@@ -70,7 +70,7 @@ void TxPacketRoutine(uint8_t * qCount, uint8_t * txAtt, uint8_t q[])
   if ( *qCount > 0 && *txAtt < _MAX_TX_ATTEMPTS )
   {  
     XBeeSend(q + (_MAX_PAYLOAD_SIZE * (_MAX_QUEUE_COUNT - *qCount )), _MAX_PAYLOAD_SIZE);
-    *txAtt++;
+    *txAtt = *txAtt + 1;
   }
 }
 

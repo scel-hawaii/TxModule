@@ -1,4 +1,3 @@
-#include "config.h"
 #include "XBeeWrapper.h"
 
 #ifndef TX_MODULE_H

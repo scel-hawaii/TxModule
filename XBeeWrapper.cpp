@@ -142,7 +142,7 @@ int XBeeGetDeliveryStatus()
 */
  void XBeeSend(uint8_t q[], int size)
  {
- int i = 0;
+ int i;
  
 #ifndef TX_DEBUG  
   ZBTxRequest zbTx = ZBTxRequest(addr64, q, size);
@@ -169,7 +169,7 @@ void delay(int n)
 {
 	int i;
 
-	for (int i = 0; i < 10000 * n; i++)
+	for (i = 0; i < 10000 * n; i++)
 	{
 	
 	}

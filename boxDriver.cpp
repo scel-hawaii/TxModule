@@ -4,7 +4,6 @@
 */
 
 
-#include "config.h"
 
 #ifdef BOX_DEBUG
 
