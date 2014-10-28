@@ -2,12 +2,12 @@ OBJS = XBeeWrapper.o TxModule.o
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG) -DTX_DEBUG
-C2FLAGS := $(CFLAGS) -DBOX_DEBUG
+boxFLAGS := $(CFLAGS) -DBOX_DEBUG
 LFLAGS = -Wall $(DEBUG)
 
 
 
-boxDriver: CFLAGS = $(C2FLAGS)
+boxDriver: CFLAGS = $(boxFLAGS)
 
 
 
@@ -22,13 +22,13 @@ boxDriver: boxDriver.o $(OBJS)
 boxDriver.o: XBeeWrapper.h TxModule.h
 	$(CC) $(CFLAGS) boxDriver.cpp
 
-unitTests.o: config.h XBeeWrapper.h TxModule.h
+unitTests.o: XBeeWrapper.h TxModule.h
 	$(CC) $(CFLAGS) unitTests.cpp
 
-XBeeWrapper.o: config.h XBeeWrapper.h
+XBeeWrapper.o: XBeeWrapper.h
 	$(CC) $(CFLAGS) XBeeWrapper.cpp
 
-TxModule.o:  config.h XBeeWrapper.h TxModule.h
+TxModule.o: XBeeWrapper.h TxModule.h
 	$(CC) $(CFLAGS) TxModule.cpp
 
 

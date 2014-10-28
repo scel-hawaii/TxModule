@@ -47,14 +47,10 @@ void NPRTest(uint8_t qCount, uint8_t txAtt, uint8_t loopCount)
 	newPayloadRoutine(&qCount, &txAtt, arr, &loopCount);
 	
 	if ( eQC == qCount && eTxA == txAtt && eLC == loopCount )
-	{
 		cout << "Pass!\n\n\n";
-	}
 	
 	else
-	{
 		cout << "Fail!\n\n\n";
-	}
 }
 
 
@@ -71,15 +67,10 @@ void HSPTest(uint8_t qCount, uint8_t txAtt)
 	handleStatusPacket(&qCount, &txAtt);
 	
 	if ( eQC == qCount && eTxA == txAtt )
-	{
 		cout << "Pass!\n\n\n";
-	}
 	
 	else
-	{
 		cout << "Fail!\n\n\n";
-	}
-
 }
 
 

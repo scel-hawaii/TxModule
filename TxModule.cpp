@@ -4,10 +4,12 @@
 * Checks for a new packet.  If a new packet has been
 * read, enter the appropriate function to handle it.
 *
-* @param qCount - pointer to queue count
+* @param qCount - pointer to amount of bytes left in queue
+* @param txIndex - pointer to index of the queue to start transmitting from
+* @param length - pointer size of data to be sent
 * @param txAtt - pointer to tx attempts
 */
-void RxPacketRoutine(uint8_t * qCount, uint8_t * txAtt)
+void RxPacketRoutine(uint16_t * qCount, uint16_t * txIndex, uint8_t * length, uint8_t * txAtt)
 {
   int apiId = 0;
   
@@ -17,7 +19,7 @@ void RxPacketRoutine(uint8_t * qCount, uint8_t * txAtt)
 	
     if (apiId ==  ZB_TX_STATUS_RESPONSE)
     {
-      handleStatusPacket(qCount, txAtt);
+      handleStatusPacket(qCount, txIndex, length, txAtt);
     }
 
     else if (apiId == ZB_RX_RESPONSE)
@@ -41,17 +43,23 @@ void handleRxPacket()
 * Handles a Tx Status packet.  Reinitialize/decrement
 * appropriate variables if it was a success.
 *
-* @param qCount - pointer to queue count
+* @param qCount - pointer to amount of bytes left in queue
+* @param txIndex - pointer to index of the queue to start transmitting from
+* @param length - pointer size of data to be sent
 * @param txAtt - pointer to tx attempts
 */
-void handleStatusPacket(uint8_t * qCount, uint8_t * txAtt)
+void handleStatusPacket(uint16_t * qCount, uint16_t * txIndex, uint8_t * length, uint8_t * txAtt)
 {
   XBeeGetZBTxStatusResponse();
   
   if ( XBeeGetDeliveryStatus() == SUCCESS )
   {
-    *qCount = *qCount - 1;
-    *txAtt = 0;
+		*txAtt = 0;
+		*txIndex = *txIndex + *length;
+		*qCount = *qCount - *length;
+
+		if ( *qCount < *length )
+			*length = *qCount;
   }
 }
 
@@ -61,34 +69,42 @@ void handleStatusPacket(uint8_t * qCount, uint8_t * txAtt)
 * Transmit the next packet in the queue and increment
 * the amount of Tx attempts.
 *
-* @param qCount - pointer to queue count
+* @param qCount - pointer to amount of bytes left in queue
+* @param txIndex - index of the queue to start transmitting from
+* @param length - size of data to be sent
 * @param txAtt - pointer to tx attempts
 * @param q - queue
 */
-void TxPacketRoutine(uint8_t * qCount, uint8_t * txAtt, uint8_t q[])
+void TxPacketRoutine(uint16_t qCount, uint16_t txIndex, uint8_t length, uint8_t * txAtt, uint8_t * q)
 {
-  if ( *qCount > 0 && *txAtt < _MAX_TX_ATTEMPTS )
+  if ( qCount > 0 && *txAtt < _MAX_TX_ATTEMPTS )
   {  
-    XBeeSend(q + (_MAX_PAYLOAD_SIZE * (_MAX_QUEUE_COUNT - *qCount )), _MAX_PAYLOAD_SIZE);
+    XBeeSend(q + txIndex, length);
     *txAtt = *txAtt + 1;
   }
 }
 
 
 /**
-* Generate a new payload and reinitialize values.
+* Reinitialize values.
+*
+* @param qCount - pointer to amount of bytes left in queue
+* @param txIndex - pointer to index of the queue to start transmitting from
+* @param length - pointer size of data to be sent
+* @param txAtt - pointer to tx attempts
+* @param loops - pointer to loop count
 */
-void newPayloadRoutine(uint8_t * qCount, uint8_t * txAtt, uint8_t q[], uint8_t * loops)
-{
-  int i;
-  
-  for (i = 0; i < _MAX_QUEUE_COUNT * _MAX_PAYLOAD_SIZE; i++)
-  {
-   q[i] = i; 
-  }
-  
-  *loops= 0;
+void newPayloadRoutine(uint16_t * qCount, uint16_t * txIndex, uint8_t * length, uint8_t * txAtt, uint8_t * loops)
+{  
+  *loops = 0;
   *txAtt = 0;
-  *qCount = _MAX_QUEUE_COUNT;
-
+   *txIndex = 0;
+//  *qCount = sizeof(schema);
+*qCount = 255;  //demo qCount
+  
+//  if ( sizeof(schema) < _MAX_PAYLOAD_SIZE )
+  *length = _MAX_PAYLOAD_SIZE;  //demo length
+  
+ // else
+ // *length = *qCount;
 }
