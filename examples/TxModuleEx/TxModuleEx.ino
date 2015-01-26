@@ -2,12 +2,15 @@
 #include <TxModule.h>
 
 
-uint8_t q[255];
+//size of data
+#define _SIZE 255
 
-uint8_t length;
-uint16_t queueCount;
+uint8_t data[_SIZE];
+uint8_t packetNum;
+uint8_t totalPackets;
+uint8_t length = 0;
 uint16_t txIndex;
-uint8_t txAttempts;
+uint8_t txAtt;
 
 uint8_t loopCount = 0;
 
@@ -16,24 +19,25 @@ void setup()
   Serial.begin(9600);
   XBeeInit();
   
-  	for ( int i = 0; i < 255; i++)
+  	for ( int i = 0; i < _SIZE; i++)
 	{
-		q[i] = i;
+		data[i] = i;
 	}
 }
 
 
 void loop()
 {
-		if ( loopCount >= _TX_INTERVAL )
-		{
-			newPayloadRoutine(&queueCount, &txIndex, &length, &txAttempts, &loopCount);
-		}
+	if ( loopCount >= 60 )
+	{
+		newPayloadRoutine(_SIZE, &packetNum, &totalPackets, &length, &txIndex, &txAtt);
+		loopCount = 0;
+	}
 		
-		RxPacketRoutine(&queueCount, &txIndex, &length, &txAttempts);
+	RxPacketRoutine(_SIZE, &packetNum, totalPackets, &length, &txIndex, &txAtt);
+	
+	TxPacketRoutine(packetNum, totalPackets, length, txIndex, &txAtt, data);
 		
-		TxPacketRoutine(queueCount, txIndex, length, &txAttempts, q);
-		
-		loopCount++;
-		delay(1000);		
+	loopCount++;
+	delay(1000);	
 }

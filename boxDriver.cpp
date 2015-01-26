@@ -13,15 +13,10 @@
 //size of data
 #define _SIZE 255
 
+TxAttributes tx;
 uint8_t data[_SIZE];
-uint8_t packetNum;
-uint8_t totalPackets;
-uint8_t length = 0;
-uint16_t txIndex;
-uint8_t txAtt;
 
 uint8_t loopCount = 0;
-
 
 int main(int argc, char* argv[])
 {
@@ -31,21 +26,24 @@ int main(int argc, char* argv[])
 		data[i] = i;
 	}
 	
-
+	initTxAttributes(&tx);
+	
 	while (1)
 	{
 		if ( loopCount >= 60 )
 		{
-			newPayloadRoutine(_SIZE, &packetNum, &totalPackets, &length, &txIndex, &txAtt);
+			newPayloadRoutine(_SIZE, &tx);
 			loopCount = 0;
 		}
 		
-		RxPacketRoutine(_SIZE, &packetNum, totalPackets, &length, &txIndex, &txAtt);
+		RxPacketRoutine(_SIZE, &tx);
 		
-		TxPacketRoutine(packetNum, totalPackets, length, txIndex, &txAtt, data);
+		TxPacketRoutine(&tx, data);
 		
 		loopCount++;
 		delay(1000);
-	}		
+	
+	}	
+	
 }
 #endif

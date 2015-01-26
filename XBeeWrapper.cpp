@@ -116,7 +116,7 @@ void XBeeGetZBTxStatusResponse()
 */
 int XBeeGetDeliveryStatus()
 {
-  int dStatus = 0;
+  int dStatus = -1;
   
 #ifndef TX_DEBUG  
   dStatus = txResponse.getDeliveryStatus();
@@ -152,9 +152,13 @@ int XBeeGetDeliveryStatus()
 #ifdef TX_DEBUG
   transmitFlag = 1;
 #ifdef BOX_DEBUG
-  std::cout << "Sending packet:\n";
+  std::cout << "Sending new packet...\n";
   
-  for ( i = 0; i < size; i++ )
+  std::cout << "Packet header: " << (int)q[0]  <<  "\n";
+  std::cout << "Packet number: " << (int)q[2] << " of " << (int)q[1] << "\n";
+  std::cout << "Data: ";
+  
+  for ( i = 3; i < size; i++ )
   {
 	std::cout << (int)q[i]  <<  " ";
   }

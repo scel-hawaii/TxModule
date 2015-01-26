@@ -10,15 +10,35 @@
 #define _DATA_HEADER 10
 
 
+/**
+* packetNum - the number of the current packet
+* totalPackets - the total amount of packets to be sent
+* length - the amount of bytes in the current packet
+* txIndex - the position of the array at which the current packet starts
+* txAttempt - the amount of attempts made to transmit the current packet
+*/
 
-void handleStatusPacket(int size, uint8_t * packetNum, uint8_t totalPackets, uint8_t * length, uint16_t * txIndex, uint8_t * txAtt);
+typedef struct txAttr
+{
+	uint8_t packetNum;
+	uint8_t totalPackets;
+	uint8_t length;
+	uint16_t txIndex;
+	uint8_t txAttempt;
+
+} TxAttributes;
+
+
+void initTxAttributes(TxAttributes * tx);
+
+void handleStatusPacket(int size, TxAttributes * tx);
 
 void handleRxPacket();
 
-void TxPacketRoutine(uint8_t packetNum, uint8_t totalPackets, uint8_t length, uint16_t txIndex, uint8_t * txAtt, uint8_t data[]);
+void TxPacketRoutine(TxAttributes * tx, uint8_t data[]);
 
-void RxPacketRoutine(int size, uint8_t * packetNum, uint8_t totalPackets, uint8_t * length, uint16_t * txIndex, uint8_t * txAtt);
+void RxPacketRoutine(int size, TxAttributes * tx);
 
-void newPayloadRoutine(int size, uint8_t * packetNum, uint8_t * totalPackets, uint8_t * length, uint16_t * txIndex, uint8_t * txAtt);
+void newPayloadRoutine(int size, TxAttributes * tx);
 
 #endif
