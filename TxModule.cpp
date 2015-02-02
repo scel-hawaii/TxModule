@@ -6,11 +6,7 @@ using namespace std;
 #endif
 
 
-void initTxAttributes(TxAttributes * tx)
-{
-	tx->length = 0;
-	
-}
+
 
 
 /**
@@ -19,10 +15,12 @@ void initTxAttributes(TxAttributes * tx)
 *
 * @param size - total size of data to be sent
 * @param tx - pointer to attributes of packet
+* @return value corresponding to a predefined message
 */
-void RxPacketRoutine(int size, TxAttributes * tx)
+uint8_t handleRxPacket(int size, TxAttributes * tx)
 {
- 	int apiId = 0;
+ 	uint8_t apiId;
+	uint8_t flag;
 	
 	if ( XBeeIsAvailable() )
 	{
@@ -30,35 +28,45 @@ void RxPacketRoutine(int size, TxAttributes * tx)
 	
 		if (apiId ==  ZB_TX_STATUS_RESPONSE)
 		{
-			handleStatusPacket(size, tx);
+			flag = statusPacketRoutine(size, tx);
 		}
 
 		else if (apiId == ZB_RX_RESPONSE)
 		{
-			handleRxPacket();
+			flag = RxPacketRoutine();
 		}
 	}
+	
+	return flag;
  }
+ 
  
 
 /**
 * Handle a standard Rx packet.
+*
+* @return value corresponding to a predefined message
 */
-void handleRxPacket()
+uint8_t RxPacketRoutine()
 {
-  XBeeGetZBRxResponse();
+	XBeeGetZBRxResponse();
+	
+	return 0;
 }
   
 
+  
 /**
 * Handles a Tx Status packet.  Reinitialize/decrement
 * appropriate variables if it was a success.
 *
 * @param size - total size of data to be sent
 * @param tx - pointer to attributes of packet
+* @return whether or not an acknowledgement was received
 */
-void handleStatusPacket(int size, TxAttributes * tx)
+uint8_t statusPacketRoutine(int size, TxAttributes * tx)
 {
+	uint8_t ack = 0;
 
 	XBeeGetZBTxStatusResponse();
 	
@@ -73,8 +81,13 @@ void handleStatusPacket(int size, TxAttributes * tx)
 		{
 			tx->length = size - (tx->packetNum - 1) * tx->length;
 		}
-  }
+		
+		ack = 1;
+	}
+	
+	return ack;
 }
+
 
 
 /**
@@ -82,8 +95,9 @@ void handleStatusPacket(int size, TxAttributes * tx)
 * the amount of Tx attempts.
 *
 * @param tx - pointer to attributes of packet
+* @return value corresponding to a predefined message
 */
-void TxPacketRoutine(TxAttributes * tx, uint8_t data[])
+uint8_t transmitPacket(TxAttributes * tx, uint8_t data[])
 {
 
 	uint8_t payload[_MAX_PAYLOAD_SIZE];
@@ -98,17 +112,19 @@ void TxPacketRoutine(TxAttributes * tx, uint8_t data[])
 		tx->txAttempt = tx->txAttempt + 1;
 	}
 
+	return 0;
 }
 
 
 
 /**
-* Reinitialize values when a new payload has been generated.
+* Initialize values when a new payload has been generated.
 *
 * @param size - total size of data to be sent
 * @param tx - pointer to attributes of packet
+* @return value corresponding to a predefined message
 */
-void newPayloadRoutine(int size, TxAttributes * tx)
+uint8_t initializeTxAttr(int size, TxAttributes * tx)
 {
 	if ( size > _MAX_PAYLOAD_SIZE - 3 )
 	{
@@ -124,4 +140,6 @@ void newPayloadRoutine(int size, TxAttributes * tx)
 	tx->packetNum = 1;	
 	tx->totalPackets = (size + tx->length - 1 ) / tx->length;
 	tx->txIndex = 0;
+	
+	return 0;
 }

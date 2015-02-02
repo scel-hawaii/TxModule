@@ -29,16 +29,14 @@ typedef struct txAttr
 } TxAttributes;
 
 
-void initTxAttributes(TxAttributes * tx);
+uint8_t statusPacketRoutine(int size, TxAttributes * tx);
 
-void handleStatusPacket(int size, TxAttributes * tx);
+uint8_t RxPacketRoutine();
 
-void handleRxPacket();
+uint8_t transmitPacket(TxAttributes * tx, uint8_t data[]);
 
-void TxPacketRoutine(TxAttributes * tx, uint8_t data[]);
+uint8_t handleRxPacket(int size, TxAttributes * tx);
 
-void RxPacketRoutine(int size, TxAttributes * tx);
-
-void newPayloadRoutine(int size, TxAttributes * tx);
+uint8_t initializeTxAttr(int size, TxAttributes * tx);
 
 #endif
