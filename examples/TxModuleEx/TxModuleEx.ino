@@ -11,6 +11,7 @@ uint8_t loopCount = 0;
 
 TxAttributes tx;
 
+
 void setup()
 {
   Serial.begin(9600);
@@ -20,8 +21,6 @@ void setup()
 	{
 		data[i] = i;
 	}
-	
-	initializeTxAttr(0, &tx);
 }
 
 
@@ -34,11 +33,11 @@ void loop()
 	}
 		
 	//read any incoming packet
-	flag = handleRxPacket(_SIZE, &tx);
+	flag = handleRxPacket(_SIZE, &tx, NULL, 0, 0);
 		
 	//transmit a packet if available
-	transmitPacket(&tx, data);
-	
+	transmitPacket(&tx, data, NULL);
+		
 	loopCount++;
 	delay(1000);
-}
+}	

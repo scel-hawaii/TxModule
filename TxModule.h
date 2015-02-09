@@ -29,13 +29,13 @@ typedef struct txAttr
 } TxAttributes;
 
 
-uint8_t statusPacketRoutine(int size, TxAttributes * tx);
+uint8_t statusPacketRoutine(int size, TxAttributes * tx, int isSuccess);
 
 uint8_t RxPacketRoutine();
 
-uint8_t transmitPacket(TxAttributes * tx, uint8_t data[]);
+uint8_t transmitPacket(TxAttributes * tx, uint8_t data[], int * isAvailable);
 
-uint8_t handleRxPacket(int size, TxAttributes * tx);
+uint8_t handleRxPacket(int size, TxAttributes * tx, int * isAvailable, int id, int isSuccess);
 
 uint8_t initializeTxAttr(int size, TxAttributes * tx);
 

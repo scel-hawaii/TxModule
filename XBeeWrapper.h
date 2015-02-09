@@ -32,16 +32,16 @@ void delay(int n);
 
 void XBeeInit();
 
-int XBeeIsAvailable();
+int XBeeIsAvailable(int * isAvailable);
 
-int XBeeGetApiId();
+int XBeeGetApiId(int id);
 
 void XBeeGetZBRxResponse();
 
 void XBeeGetZBTxStatusResponse();
 
-int XBeeGetDeliveryStatus();
+int XBeeGetDeliveryStatus(int isSuccess);
 
-void XBeeSend(uint8_t q[], int size);
+void XBeeSend(uint8_t q[], int size, int * isAvailable);
 
 #endif

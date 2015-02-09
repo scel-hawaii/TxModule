@@ -38,8 +38,6 @@ void setup()
 	{
 		data[i] = i;
 	}
-	
-	initializeTxAttr(0, &tx);
 }
 
 
@@ -53,6 +51,11 @@ void setup()
 */
 void boxLoop()
 {
+	//flags if a new packet is available
+	int isAvailable = 0;
+	//flags if an ack was received
+	int isSuccess = 1;
+
 	while (1)
 	{
 		if ( loopCount >= 60 )
@@ -62,10 +65,10 @@ void boxLoop()
 		}
 		
 		//read any incoming packet
-		flag = handleRxPacket(_SIZE, &tx);
+		flag = handleRxPacket(_SIZE, &tx, &isAvailable, ZB_TX_STATUS_RESPONSE, isSuccess);
 		
 		//transmit a packet if available
-		transmitPacket(&tx, data);
+		transmitPacket(&tx, data, &isAvailable);
 		
 		loopCount++;
 		delay(1000);

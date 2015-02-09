@@ -15,20 +15,23 @@ using namespace std;
 *
 * @param size - total size of data to be sent
 * @param tx - pointer to attributes of packet
+* @param isAvailable - debug flag that replaces XBee functions
+* @param id - debug value that replaces XBee functions
+* @param isSuccess - debug value that replaces XBee functions
 * @return value corresponding to a predefined message
 */
-uint8_t handleRxPacket(int size, TxAttributes * tx)
+uint8_t handleRxPacket(int size, TxAttributes * tx, int * isAvailable, int id, int isSuccess)
 {
  	uint8_t apiId;
 	uint8_t flag;
 	
-	if ( XBeeIsAvailable() )
+	if ( XBeeIsAvailable(isAvailable) )
 	{
-		apiId = XBeeGetApiId();
+		apiId = XBeeGetApiId(id);
 	
 		if (apiId ==  ZB_TX_STATUS_RESPONSE)
 		{
-			flag = statusPacketRoutine(size, tx);
+			flag = statusPacketRoutine(size, tx, isSuccess);
 		}
 
 		else if (apiId == ZB_RX_RESPONSE)
@@ -62,15 +65,16 @@ uint8_t RxPacketRoutine()
 *
 * @param size - total size of data to be sent
 * @param tx - pointer to attributes of packet
+* @param isSuccess - debug value that replaces XBee functions
 * @return whether or not an acknowledgement was received
 */
-uint8_t statusPacketRoutine(int size, TxAttributes * tx)
+uint8_t statusPacketRoutine(int size, TxAttributes * tx, int isSuccess)
 {
 	uint8_t ack = 0;
 
 	XBeeGetZBTxStatusResponse();
 	
-	if ( XBeeGetDeliveryStatus() == SUCCESS )
+	if ( XBeeGetDeliveryStatus(isSuccess) == SUCCESS )
 	{
 		tx->txAttempt = 0;
 		tx->txIndex = tx->txIndex + tx->length;
@@ -95,9 +99,10 @@ uint8_t statusPacketRoutine(int size, TxAttributes * tx)
 * the amount of Tx attempts.
 *
 * @param tx - pointer to attributes of packet
+* @param isAvailable - debug flag that replaces XBee functions
 * @return value corresponding to a predefined message
 */
-uint8_t transmitPacket(TxAttributes * tx, uint8_t data[])
+uint8_t transmitPacket(TxAttributes * tx, uint8_t data[], int * isAvailable)
 {
 
 	uint8_t payload[_MAX_PAYLOAD_SIZE];
@@ -108,7 +113,7 @@ uint8_t transmitPacket(TxAttributes * tx, uint8_t data[])
 		payload[1] = tx->totalPackets;
 		payload[2] = tx->packetNum;
 		memcpy(payload+3, data + tx->txIndex, tx->length);
-		XBeeSend(payload, tx->length+3);
+		XBeeSend(payload, tx->length+3, isAvailable);
 		tx->txAttempt = tx->txAttempt + 1;
 	}
 
