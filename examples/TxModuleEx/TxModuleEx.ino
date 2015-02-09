@@ -6,13 +6,10 @@
 #define _SIZE 255
 
 uint8_t data[_SIZE];
-uint8_t packetNum;
-uint8_t totalPackets;
-uint8_t length = 0;
-uint16_t txIndex;
-uint8_t txAtt;
-
+uint8_t flag;
 uint8_t loopCount = 0;
+
+TxAttributes tx;
 
 void setup()
 {
@@ -23,21 +20,25 @@ void setup()
 	{
 		data[i] = i;
 	}
+	
+	initializeTxAttr(0, &tx);
 }
 
 
 void loop()
 {
 	if ( loopCount >= 60 )
-	{
-		newPayloadRoutine(_SIZE, &packetNum, &totalPackets, &length, &txIndex, &txAtt);
+	{	//reinitialize values when a new packet is ready
+		initializeTxAttr(_SIZE, &tx);
 		loopCount = 0;
 	}
 		
-	RxPacketRoutine(_SIZE, &packetNum, totalPackets, &length, &txIndex, &txAtt);
-	
-	TxPacketRoutine(packetNum, totalPackets, length, txIndex, &txAtt, data);
+	//read any incoming packet
+	flag = handleRxPacket(_SIZE, &tx);
 		
+	//transmit a packet if available
+	transmitPacket(&tx, data);
+	
 	loopCount++;
-	delay(1000);	
+	delay(1000);
 }

@@ -39,7 +39,7 @@ void setup()
 		data[i] = i;
 	}
 	
-	//initializeTxAttr(0, &tx);
+	initializeTxAttr(0, &tx);
 }
 
 
