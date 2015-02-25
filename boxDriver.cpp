@@ -7,13 +7,13 @@
 
 #ifdef BOX_DEBUG
 
-#include "XBeeWrapper.h"
 #include "TxModule.h"
 
 //size of data
 #define _SIZE 256
 
 void setup();
+void delay(int n);
 void boxLoop();
 
 
@@ -40,6 +40,11 @@ void setup()
 	}
 }
 
+void delay(int n)
+{
+	for (int i = 0; i < 10000 * n; i++) {}
+}
+
 
 /*
 *	Module used in a typical weatherbox loop.  After
@@ -51,11 +56,6 @@ void setup()
 */
 void boxLoop()
 {
-	//flags if a new packet is available
-	int isAvailable = 0;
-	//flags if an ack was received
-	int isSuccess = 1;
-
 	while (1)
 	{
 		if ( loopCount >= 60 )
@@ -65,10 +65,10 @@ void boxLoop()
 		}
 		
 		//read any incoming packet
-		flag = handleRxPacket(_SIZE, &tx, &isAvailable, ZB_TX_STATUS_RESPONSE, isSuccess);
+		flag = handleRxPacket(_SIZE, &tx);
 		
 		//transmit a packet if available
-		transmitPacket(&tx, data, &isAvailable);
+		transmitPacket(&tx, data);
 		
 		loopCount++;
 		delay(1000);

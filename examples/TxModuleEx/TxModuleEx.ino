@@ -33,10 +33,10 @@ void loop()
 	}
 		
 	//read any incoming packet
-	flag = handleRxPacket(_SIZE, &tx, NULL, 0, 0);
+	flag = handleRxPacket(_SIZE, &tx);
 		
 	//transmit a packet if available
-	transmitPacket(&tx, data, NULL);
+	transmitPacket(&tx, data);
 		
 	loopCount++;
 	delay(1000);

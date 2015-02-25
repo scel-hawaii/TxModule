@@ -1,7 +1,9 @@
 #include "TxModule.h"
+#include "Wrapper.h"
 
 #ifdef TX_DEBUG
 #include <cstring>
+#include <stdint.h>
 using namespace std;
 #endif
 
@@ -15,29 +17,22 @@ using namespace std;
 *
 * @param size - total size of data to be sent
 * @param tx - pointer to attributes of packet
-* @param isAvailable - debug flag that replaces XBee functions
-* @param id - debug value that replaces XBee functions
-* @param isSuccess - debug value that replaces XBee functions
 * @return value corresponding to a predefined message
 */
-uint8_t handleRxPacket(int size, TxAttributes * tx, int * isAvailable, int id, int isSuccess)
+uint8_t handleRxPacket(int size, TxAttributes * tx)
 {
- 	uint8_t apiId;
+ 	uint8_t packetType;
 	uint8_t flag;
 	
-	if ( XBeeIsAvailable(isAvailable) )
+	if ( packetIsAvailable() )
 	{
-		apiId = XBeeGetApiId(id);
+		packetType = getPacketType();
 	
-		if (apiId ==  ZB_TX_STATUS_RESPONSE)
-		{
-			flag = statusPacketRoutine(size, tx, isSuccess);
-		}
+		if ( packetType == STATUSPACKET )
+			flag = statusPacketRoutine(size, tx);
 
-		else if (apiId == ZB_RX_RESPONSE)
-		{
-			flag = RxPacketRoutine();
-		}
+		else if ( packetType == RXPACKET )
+			packetType = RxPacketRoutine();
 	}
 	
 	return flag;
@@ -52,8 +47,6 @@ uint8_t handleRxPacket(int size, TxAttributes * tx, int * isAvailable, int id, i
 */
 uint8_t RxPacketRoutine()
 {
-	XBeeGetZBRxResponse();
-	
 	return 0;
 }
   
@@ -65,21 +58,17 @@ uint8_t RxPacketRoutine()
 *
 * @param size - total size of data to be sent
 * @param tx - pointer to attributes of packet
-* @param isSuccess - debug value that replaces XBee functions
 * @return whether or not an acknowledgement was received
 */
-uint8_t statusPacketRoutine(int size, TxAttributes * tx, int isSuccess)
+uint8_t statusPacketRoutine(int size, TxAttributes * tx)
 {
 	uint8_t ack = 0;
-
-	XBeeGetZBTxStatusResponse();
 	
-	if ( XBeeGetDeliveryStatus(isSuccess) == SUCCESS )
+	if ( packetDelievered() )
 	{
 		tx->txAttempt = 0;
 		tx->txIndex = tx->txIndex + tx->length;
 		tx->packetNum = tx->packetNum + 1;
-		
 
 		if ( tx->packetNum == tx->totalPackets )
 		{
@@ -99,12 +88,10 @@ uint8_t statusPacketRoutine(int size, TxAttributes * tx, int isSuccess)
 * the amount of Tx attempts.
 *
 * @param tx - pointer to attributes of packet
-* @param isAvailable - debug flag that replaces XBee functions
 * @return value corresponding to a predefined message
 */
-uint8_t transmitPacket(TxAttributes * tx, uint8_t data[], int * isAvailable)
+uint8_t transmitPacket(TxAttributes * tx, uint8_t data[])
 {
-
 	uint8_t payload[_MAX_PAYLOAD_SIZE];
 	
 	if ( tx->length > 0 && tx->packetNum <= tx->totalPackets && tx->txAttempt < _MAX_TX_ATTEMPTS )
@@ -113,7 +100,7 @@ uint8_t transmitPacket(TxAttributes * tx, uint8_t data[], int * isAvailable)
 		payload[1] = tx->totalPackets;
 		payload[2] = tx->packetNum;
 		memcpy(payload+3, data + tx->txIndex, tx->length);
-		XBeeSend(payload, tx->length+3, isAvailable);
+		transmit(payload, tx->length+3);
 		tx->txAttempt = tx->txAttempt + 1;
 	}
 

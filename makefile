@@ -1,11 +1,11 @@
-OBJS = XBeeWrapper.o TxModule.o
+OBJS = XBeeSim.o Wrapper.o TxModule.o
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG) -DTX_DEBUG
 boxFLAGS := $(CFLAGS) -DBOX_DEBUG
 LFLAGS = -Wall $(DEBUG)
 
-
+#To do: remove XBeeSim when using XBee
 
 boxDriver: CFLAGS = $(boxFLAGS)
 
@@ -19,16 +19,19 @@ boxDriver: boxDriver.o $(OBJS)
 
 
 
-boxDriver.o: XBeeWrapper.h TxModule.h
+boxDriver.o: Wrapper.h TxModule.h
 	$(CC) $(CFLAGS) boxDriver.cpp
 
-unitTests.o: XBeeWrapper.h TxModule.h
+unitTests.o: Wrapper.h TxModule.h
 	$(CC) $(CFLAGS) unitTests.cpp
 
-XBeeWrapper.o: XBeeWrapper.h
-	$(CC) $(CFLAGS) XBeeWrapper.cpp
+XBeeSim.o: XBeeSim.h
+	$(CC) $(CFLAGS) XBeeSim.cpp
 
-TxModule.o: XBeeWrapper.h TxModule.h
+Wrapper.o: Wrapper.h
+	$(CC) $(CFLAGS) Wrapper.cpp
+
+TxModule.o: Wrapper.h TxModule.h
 	$(CC) $(CFLAGS) TxModule.cpp
 
 
