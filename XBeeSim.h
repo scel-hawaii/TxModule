@@ -13,6 +13,9 @@
 class XBeeSim
 {
 	public:
+		XBeeSim();
+		XBeeSim(int availability, int id, int dStatus);
+		~XBeeSim();
 		int getAvailability();
 		void setAvailability(int val);
 		int getApiId();

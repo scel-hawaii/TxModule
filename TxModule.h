@@ -3,6 +3,9 @@
 #ifndef TX_MODULE_H
 #define TX_MODULE_H
 
+#define _MAX_PAYLOAD_SIZE 84  //max payload size for the XBee
+#define _HEADER_LENGTH 3 // length of a TxModule header
+
 #define _MAX_TX_ATTEMPTS 5  //arbitrary value for the amount of tx retries per packet
 
 #define _DATA_HEADER 10
@@ -27,14 +30,14 @@ typedef struct txAttr
 } TxAttributes;
 
 
-uint8_t handleRxPacket(int size, TxAttributes * tx);
+int handleRxPacket(int size, TxAttributes * tx);
 
-uint8_t RxPacketRoutine();
+int RxPacketRoutine();
 
-uint8_t statusPacketRoutine(int size, TxAttributes * tx);
+int statusPacketRoutine(int size, TxAttributes * tx);
 
-uint8_t transmitPacket(TxAttributes * tx, uint8_t data[]);
+int transmitPacket(TxAttributes * tx, uint8_t data[]);
 
-uint8_t initializeTxAttr(int size, TxAttributes * tx);
+int initializeTxAttr(int size, TxAttributes * tx);
 
 #endif

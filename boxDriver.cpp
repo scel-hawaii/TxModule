@@ -1,16 +1,11 @@
 /*
 * Driver which emulates the weatherbox behaviour
-* and prints XBee debug statements.
+* and prints debug statements.
 */
-
-
-
 #ifdef BOX_DEBUG
-
 #include "TxModule.h"
 
-//size of data
-#define _SIZE 256
+#define _SIZE 256 //size of data
 
 void setup();
 void delay(int n);
@@ -23,11 +18,17 @@ uint8_t loopCount = 0;
 
 TxAttributes tx;
 
+
+
+/*
+* The main driver.
+*/
 int main(int argc, char* argv[])
 {
 	setup();
 	boxLoop();
 }
+
 
 /*
 *	Initializes values and creates a demo set of data.
@@ -40,6 +41,10 @@ void setup()
 	}
 }
 
+
+/*
+* Delay function.
+*/
 void delay(int n)
 {
 	for (int i = 0; i < 10000 * n; i++) {}
@@ -48,7 +53,7 @@ void delay(int n)
 
 /*
 *	Module used in a typical weatherbox loop.  After
-*  enough samples are collected, an initialization is 
+*  enough samples are collected, an initialization is
 *  executed to prepare for the transmission of data.
 *  Incoming packets are read and decisions are made
 *  based off of what was received.  If there are packets
@@ -63,15 +68,16 @@ void boxLoop()
 			initializeTxAttr(_SIZE, &tx);
 			loopCount = 0;
 		}
-		
+
 		//read any incoming packet
 		flag = handleRxPacket(_SIZE, &tx);
-		
+
 		//transmit a packet if available
 		transmitPacket(&tx, data);
-		
+
 		loopCount++;
 		delay(1000);
-	}	
+	}
 }
+
 #endif

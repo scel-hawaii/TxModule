@@ -6,7 +6,6 @@
 #ifndef XBEE_WRAPPER_H
 #define XBEE_WRAPPER_H
 
-#define _MAX_PAYLOAD_SIZE 84  //max payload size for the XBee
 #define STATUSPACKET 1
 #define RXPACKET 2
 #define ACK 1
