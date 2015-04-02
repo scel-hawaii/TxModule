@@ -18,11 +18,11 @@ int main(int argc, char* argv[])
 
 	cout << "Testing initialization function...";
 	if ( (err = initTest()) )	cout << "test failed. Error " << err << ".\n";
-	else											cout << "test passed!\n";
+	else								cout << "test passed!\n";
 
 	cout << "Testing transmit function...";
 	if ( (err = txTest()) )		cout << "test failed. Error " << err << ".\n";
-	else											cout << "test passed!\n";
+	else								cout << "test passed!\n";
 
 }
 
@@ -41,16 +41,16 @@ int initTest()
 
 	//multi packet payload
 	initializeTxAttr((_MAX_PAYLOAD_SIZE-3)*10, &txAttr1);
-	if ( txAttr1.totalPackets != 10 )						err = 1;
-	if ( txAttr1.length != 81 )									err = 2;
+	if ( txAttr1.totalPackets != 10 )			err = 1;
+	if ( txAttr1.length != 81 )					err = 2;
 
 	//single packet payload
 	initializeTxAttr(5, &txAttr1);
-	if ( txAttr1.totalPackets != 1 )						err = 4;
-	if ( txAttr1.length != 5 )									err = 8;
+	if ( txAttr1.totalPackets != 1 )				err = 4;
+	if ( txAttr1.length != 5 )						err = 8;
 
 	//no payload
-	if ( initializeTxAttr(0, &txAttr1) )				err = 16;
+	if ( initializeTxAttr(0, &txAttr1) )			err = 16;
 
 	return err;
 }

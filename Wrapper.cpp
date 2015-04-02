@@ -76,8 +76,8 @@ uint8_t getPacketType()
 	#ifndef TX_DEBUG
 	packetType = xbee.getResponse().getApiId();
 
-	if ( packetType == ZB_TX_STATUS_RESPONSE )	packetType = STATUSPACKET;
-	else if ( packetType == ZB_RX_RESPONSE ) 		packetType = RXPACKET;
+	if ( packetType == ZB_TX_STATUS_RESPONSE )		packetType = STATUSPACKET;
+	else if ( packetType == ZB_RX_RESPONSE ) 			packetType = RXPACKET;
 	#endif
 
 
@@ -85,11 +85,11 @@ uint8_t getPacketType()
 	packetType = xbeeSim.getApiId();
 
 	if ( packetType == ZB_TX_STATUS_RESPONSE ) 	packetType = STATUSPACKET;
-	else if ( packetType == ZB_RX_RESPONSE ) 		packetType = RXPACKET;
+	else if ( packetType == ZB_RX_RESPONSE )			packetType = RXPACKET;
 
 		#ifdef BOX_DEBUG
 		if ( packetType == STATUSPACKET )	std::cout << "...it's a Tx status packet.\n";
-		else															std::cout << "...it's not a Tx status packet.\n";
+		else													std::cout << "...it's not a Tx status packet.\n";
 		#endif
 	#endif
 
@@ -122,7 +122,7 @@ uint8_t packetDelievered()
 
 		#ifdef BOX_DEBUG
 		if ( delivered )	std::cout << "...it was a success!\n";
-		else							std::cout << "...it was not received.\n";
+		else					std::cout << "...it was not received.\n";
 		#endif
 	#endif
 
